@@ -1,0 +1,3 @@
+#' @importFrom purrr "%>%"
+#' @export
+purrr::"%>%"

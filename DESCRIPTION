@@ -1,11 +1,22 @@
 Package: suropt
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Surogate-based Optimization
 Version: 0.1.0
-Author: Who wrote it
+Authors@R: c(person("Adriano", "Passos", email="adriano.utfpr@gmail.com", role=c("aut","cre")))
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.0.1
+Depends: R (>= 3.4.0)
+Imports: methods, 
+    lhs,
+    ggplot2,
+    dplyr,
+    tidyr,
+    purrr,
+    tibble,
+    DiceKriging,
+    DiceOptim
