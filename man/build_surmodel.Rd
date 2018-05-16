@@ -35,6 +35,9 @@ model <- build_surmodel(fn, 20, 2)
 fn <- function(x) list(y = DiceKriging::branin(x), g = 0.2 - prod(x))
 model <- build_surmodel(fn, 20, 2)
 
+fn <- shaffer2
+model <- build_surmodel(fn, 20, 1)
+
 fn <- binh
 model <- build_surmodel(fn, 20, 2)
 }

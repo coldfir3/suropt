@@ -40,6 +40,9 @@ setClass('surmodel', representation(
 #' fn <- function(x) list(y = DiceKriging::branin(x), g = 0.2 - prod(x))
 #' model <- build_surmodel(fn, 20, 2)
 #'
+#' fn <- shaffer2
+#' model <- build_surmodel(fn, 20, 1)
+#'
 #' fn <- binh
 #' model <- build_surmodel(fn, 20, 2)
 build_surmodel <- function(fn, n_in, d_in, doe_type = 'rlhs', sur_type = 'mkm', pre_process = NULL, post_process = NULL){
@@ -77,8 +80,12 @@ build_surmodel <- function(fn, n_in, d_in, doe_type = 'rlhs', sur_type = 'mkm', 
   if(sur_type == 'mkm')
     sur <- purrr::pmap(list(response = cbind(.Y(data), .G(data)), i = 1:d_out), quiet_km, design = .X(data), pb = pb)
 
-  model <- list(data = data, sur = sur, fn = fn)
-  class(model) <- 'surmodel'
+  model <- methods::new('surmodel')
+  model@data <- data
+  model@sur <- sur
+  model@fn <- fn
+
+  methods::validObject(model)
 
   model
 }
