@@ -34,6 +34,10 @@ setClass('surmodel', representation(
 #' @export
 #' @examples
 #'
+#' fn <- function(x) list(y = x^2)
+#' model <- build_surmodel(fn, 20, 1)
+#' plot(model)
+#'
 #' fn <- function(x) list(y = DiceKriging::branin(x))
 #' model <- build_surmodel(fn, 20, 2)
 #'
@@ -45,6 +49,7 @@ setClass('surmodel', representation(
 #'
 #' fn <- binh
 #' model <- build_surmodel(fn, 20, 2)
+#' plot(model)
 build_surmodel <- function(fn, n_in, d_in, doe_type = 'rlhs', sur_type = 'mkm', pre_process = NULL, post_process = NULL){
 
   if(doe_type == 'rlhs')
@@ -59,7 +64,6 @@ build_surmodel <- function(fn, n_in, d_in, doe_type = 'rlhs', sur_type = 'mkm', 
     purrr::transpose() %>%
     purrr::map(purrr::reduce, rbind) %>%
     purrr::map(unname)
-
 
   if(is.null(YG$g)){
     FS <- rep(TRUE, n_in)
@@ -90,4 +94,56 @@ build_surmodel <- function(fn, n_in, d_in, doe_type = 'rlhs', sur_type = 'mkm', 
   model
 }
 
+show_surmodel <- function(object){
+  object
+}
+#' @describeIn surmodel show method
+#' @param object \code{surmodel} object
+#' @export
+setMethod("show", signature(object = "surmodel"), show_surmodel)
+
+#' @export
+plot.surmodel <- function(x, y, ...){
+
+  model <- x
+
+  x <- .X(model@data)
+  y <- .Y(model@data)
+
+  if(ncol(x) == 2 & ncol(y) == 2){
+    data <- rbind(
+      cbind(type = 'design',
+            unname(x),
+            is.feasible = model@data$is.feasible,
+            source = model@data$source),
+      cbind(type = 'objective',
+            unname(y),
+            is.feasible = model@data$is.feasible,
+            source = model@data$source)
+    )
+    names(data)[2:3] <- c('x', 'y')
+  }
+  else if(ncol(x) == 1 & ncol(y) == 1){
+    data <- cbind(type = '', x = unname(x), y = unname(y),
+                  is.feasible = model@data$is.feasible,
+                  source = model@data$source)
+
+  }
+  else
+    stop('plot function not implemented for this strucuture of surmodel')
+
+  data$source <- as.factor(data$source)
+  data$is.feasible <- factor(data$is.feasible, levels = c(TRUE, FALSE))
+
+  p <- ggplot2::ggplot(data = data, ggplot2::aes_string(x = 'x', y = 'y', shape = 'source', col = 'is.feasible')) +
+    ggplot2::geom_point(size = 3) +
+    ggplot2::facet_wrap(~type,  scales = "free")
+
+  p <- p + ggplot2::scale_color_manual('Is Feasible', values = c('black', 'red')) +
+    ggplot2::scale_shape_discrete('Type') +
+    ggplot2::theme_minimal()
+
+  p
+
+}
 

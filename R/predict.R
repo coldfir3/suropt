@@ -11,7 +11,6 @@ predict_surmodel <- function(object, newdata = NULL){
   else
     stop('functionality not yet implemented')
 
-
 }
 
 #' Predictor surogate model
@@ -83,5 +82,60 @@ predict_front <- function(model, control = NULL){
                     mdist = control$mdist,
                     vectorized = TRUE
   )#[c('par', 'value')]
+}
+
+
+plot_predict <- function(model){
+
+  pred <- predict_front(model)
+
+  x <- pred$par[pred$pareto.optimal,]
+  y <- pred$value[pred$pareto.optimal,]
+  p <- get_feasibility(model, x)
+
+  if(ncol(x) == 2 & ncol(y) == 2){
+    data <- rbind(
+      cbind(type = 'design',
+            unname(as.data.frame(x)),
+            feasibility = p,
+            source = 'predicted'),
+      cbind(type = 'objective',
+            unname(as.data.frame(y)),
+            feasibility = p,
+            source = 'predicted')
+    )
+    data <- rbind(
+      data,
+      cbind(type = 'design',
+            unname(.X(model@data)),
+            feasibility = model@data$is.feasible,
+            source = model@data$source),
+      cbind(type = 'objective',
+            unname(.Y(model@data)),
+            feasibility = model@data$is.feasible,
+            source = model@data$source)
+    )
+    names(data)[2:3] <- c('x', 'y')
+  }
+  else if(ncol(x) == 1 & ncol(y) == 1){
+    data <- cbind(type = '', x = unname(x), y = unname(y),
+                  is.feasible = model@data$is.feasible,
+                  source = model@data$source)
+
+  }
+  else
+    stop('plot function not implemented for this strucuture of surmodel')
+
+  data$source <- as.factor(data$source)
+
+  p <- ggplot2::ggplot(data = data, ggplot2::aes_string(x = 'x', y = 'y', shape = 'source', col = 'feasibility')) +
+    ggplot2::geom_point(size = 1, alpha = 1) +
+    ggplot2::facet_wrap(~type,  scales = "free")
+
+  p <- p + ggplot2::scale_colour_gradient('Feasibility', low = 'red', high = 'black', limits = c(0, 1)) +
+    ggplot2::scale_shape_discrete('Type') +
+    ggplot2::theme_minimal()
+
+  p
 
 }

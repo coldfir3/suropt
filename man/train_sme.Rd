@@ -16,8 +16,9 @@ Trainer for a surmodel object based on the SME algorithm
 }
 \examples{
 fn <- shaffer2
-model <- build_surmodel(fn, 20, 1) \%>\% train_sme(5)
+model <- build_surmodel(fn, 10, 1) \%>\% train_sme(5)
 
 fn <- binh
-model <- build_surmodel(fn, 20, 2) \%>\% train_sme(5)
+model <- build_surmodel(fn, 10, 2) \%>\% train_sme(5)
+suropt:::plot_predict(model)
 }

@@ -6,10 +6,11 @@
 #' @export
 #' @examples
 #' fn <- shaffer2
-#' model <- build_surmodel(fn, 20, 1) %>% train_sme(5)
+#' model <- build_surmodel(fn, 10, 1) %>% train_sme(5)
 #'
 #' fn <- binh
-#' model <- build_surmodel(fn, 20, 2) %>% train_sme(5)
+#' model <- build_surmodel(fn, 10, 2) %>% train_sme(5)
+#' suropt:::plot_predict(model)
 train_sme <- function(model, niter){
 
   cat('Running SME algorithm\n\n')
@@ -25,16 +26,9 @@ train_sme <- function(model, niter){
 
     cat('\n## iteration ', i, ' of ', niter, '\n', sep = '')
 
-    front <- predict(model)
-
     cat('\nfinding infill design ...\n')
-    sd <- .Y(model@sur) %>%
-      purrr::map(DiceKriging::predict, newdata = as.data.frame(front$par), type = 'UK', checkNames = FALSE) %>%
-      purrr::map('sd') %>%
-      as.data.frame() %>%
-      apply(1, prod)
-    entropy <- d_obj * K_entropy + log(sd^2)/2
-    x_star <- front$par[which.max(entropy),]
+    front <- predict(model)
+    x_star <- front$par[which.max(get_entropy(model, front$par)),]
     cat('  found:', round(x_star,3), '\n')
 
     cat('calculating responses at infill point ...')
@@ -74,5 +68,6 @@ train_sme <- function(model, niter){
   return(model)
 }
 
-K_entropy = log(2 * pi * exp(1))/2
+
+
 

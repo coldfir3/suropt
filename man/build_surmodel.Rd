@@ -29,6 +29,10 @@ Build an surmodel object
 }
 \examples{
 
+fn <- function(x) list(y = x^2)
+model <- build_surmodel(fn, 20, 1)
+plot(model)
+
 fn <- function(x) list(y = DiceKriging::branin(x))
 model <- build_surmodel(fn, 20, 2)
 
@@ -40,4 +44,5 @@ model <- build_surmodel(fn, 20, 1)
 
 fn <- binh
 model <- build_surmodel(fn, 20, 2)
+plot(model)
 }
