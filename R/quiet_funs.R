@@ -6,4 +6,5 @@ quiet_km <- function(..., i = 1, pb = NULL){
 }
 quiet_crit_EFI <- purrr::quietly(DiceOptim::crit_EFI)
 quiet_EI <- purrr::quietly(DiceOptim::EI)
-#quiet_crit_EHI <- purrr::quietly(GPareto::crit_EHI)
+quiet_crit_EHI <- purrr::quietly(GPareto::crit_EHI)
+quiet_genoud <- purrr::quietly(rgenoud::genoud)

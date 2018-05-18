@@ -48,23 +48,10 @@ predict_front <- function(model, control = NULL){
   if (is.null(control$mdist))
     control$mdist <- 20
 
-  model.y <- .Y(model@sur)
-  model.g <- .G(model@sur)
+  fn <- function(x){get_stats(model, x, 'y')$mean %>% t()}
 
-  fn <- function(x){
-    purrr::map(model.y, DiceKriging::predict, newdata = as.data.frame(x), type = 'UK', checkNames = FALSE) %>%
-      purrr::map('mean') %>%
-      as.data.frame() %>% t()
-
-  }
   if(d_cons){
-    cfn <- function(x){
-      purrr::map(model.g, DiceKriging::predict, newdata = as.data.frame(x), type = 'UK', checkNames = FALSE) %>%
-        purrr::map('mean') %>%
-        as.data.frame() %>%
-        t() %>%
-        `*`(-1)
-    }
+    cfn <- function(x){ -get_stats(model, x, 'g')$mean %>% t()}
   }
   else{
     cfn <- NULL
@@ -81,7 +68,7 @@ predict_front <- function(model, control = NULL){
                     mprob = control$mprob,
                     mdist = control$mdist,
                     vectorized = TRUE
-  )#[c('par', 'value')]
+  )
 }
 
 
@@ -129,7 +116,7 @@ plot_predict <- function(model){
   data$source <- as.factor(data$source)
 
   p <- ggplot2::ggplot(data = data, ggplot2::aes_string(x = 'x', y = 'y', shape = 'source', col = 'feasibility')) +
-    ggplot2::geom_point(size = 1, alpha = 1) +
+    ggplot2::geom_point(size = 2, alpha = 1) +
     ggplot2::facet_wrap(~type,  scales = "free")
 
   p <- p + ggplot2::scale_colour_gradient('Feasibility', low = 'red', high = 'black', limits = c(0, 1)) +

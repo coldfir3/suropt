@@ -2,6 +2,7 @@
 #'
 #' @param model surmodel object to be trained
 #' @param niter integer indicating number of iterations
+#' @param optimizer character, only working for nsga2 by now
 #'
 #' @export
 #' @examples
@@ -10,10 +11,12 @@
 #'
 #' fn <- binh
 #' model <- build_surmodel(fn, 10, 2) %>% train_sme(5)
+#' plot(model)
 #' suropt:::plot_predict(model)
-train_sme <- function(model, niter){
+train_sme <- function(model, niter, optimizer = 'nsga2'){
 
-  cat('Running SME algorithm\n\n')
+  cat('Running SME algorithm on', niter, 'iterations...\n')
+  pb <- utils::txtProgressBar(min = 0, max = niter, width = niter, style = 3)
 
   fn <- model@fn
 
@@ -24,20 +27,13 @@ train_sme <- function(model, niter){
 
   for (i in 1:niter){
 
-    cat('\n## iteration ', i, ' of ', niter, '\n', sep = '')
+    if(optimizer == 'nsga2')
+      front <- predict(model)
+    else
+      stop('Only the "nsga2" optimizer is implemented.')
 
-    cat('\nfinding infill design ...\n')
-    front <- predict(model)
     x_star <- front$par[which.max(get_entropy(model, front$par)),]
-    cat('  found:', round(x_star,3), '\n')
-
-    cat('calculating responses at infill point ...')
     res_star <- safe_fn(fn, x = x_star)
-    cat(' got values of \n  objectives:', res_star$y)
-    cat(' (', dominates(rbind(res_star$y), .Y(model@data)), ')\n', sep ='')
-    cat('  constraints:', res_star$g)
-    cat(' (', ifelse(is.null(res_star$g), 'feasible', ifelse(all(res_star$g < 0), 'feasible', 'un-feasible')), ')\n', sep ='')
-
 
     if(!is.null(res_star$g))
       new_data <- data.frame(
@@ -62,10 +58,13 @@ train_sme <- function(model, niter){
     model@data <- new_data
     model@sur <- new_sur
 
-    cat('\n')
+    utils::setTxtProgressBar(pb, i)
+
   }
 
-  return(model)
+  cat('\n')
+
+  model
 }
 
 

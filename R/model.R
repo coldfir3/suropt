@@ -17,6 +17,8 @@ setClass('surmodel', representation(
 ), validity = check.surmodel
 )
 
+## TODO, add control
+
 #' Build an surmodel object
 #'
 #' @param fn high fidelity function (fun must return a list of vectors with the
@@ -57,7 +59,7 @@ build_surmodel <- function(fn, n_in, d_in, doe_type = 'rlhs', sur_type = 'mkm', 
   else
     stop('doe_type not available, check ?build_surmodel for further help.')
 
-  cat('\nEvaluating fn on DOE...\n')
+  cat('Evaluating fn on DOE...\n')
   pb <- utils::txtProgressBar(min = 0, max = n_in, width = n_in, style = 3)
   YG <- list(x = split(X, 1:n_in), i = 1:n_in) %>%
     purrr::pmap(safe_fn, fn = fn, pb = pb) %>%
@@ -91,11 +93,20 @@ build_surmodel <- function(fn, n_in, d_in, doe_type = 'rlhs', sur_type = 'mkm', 
 
   methods::validObject(model)
 
+  cat('\n')
+
   model
 }
 
 show_surmodel <- function(object){
-  object
+
+  model <- object
+
+  d_in   <- ncol(.X(model@data))
+  d_obj  <- ncol(.Y(model@data))
+  d_cons <- ncol(.G(model@data))
+
+  cat('Surogate Model:', d_in, 'inputs,', d_obj, 'objectives,', d_cons, 'constrains')
 }
 #' @describeIn surmodel show method
 #' @param object \code{surmodel} object

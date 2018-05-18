@@ -4,12 +4,14 @@
 \alias{train_sme}
 \title{Trainer for a surmodel object based on the SME algorithm}
 \usage{
-train_sme(model, niter)
+train_sme(model, niter, optimizer = "nsga2")
 }
 \arguments{
 \item{model}{surmodel object to be trained}
 
 \item{niter}{integer indicating number of iterations}
+
+\item{optimizer}{character, only working for nsga2 by now}
 }
 \description{
 Trainer for a surmodel object based on the SME algorithm
@@ -20,5 +22,6 @@ model <- build_surmodel(fn, 10, 1) \%>\% train_sme(5)
 
 fn <- binh
 model <- build_surmodel(fn, 10, 2) \%>\% train_sme(5)
+plot(model)
 suropt:::plot_predict(model)
 }

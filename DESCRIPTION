@@ -20,4 +20,9 @@ Imports: methods,
     tibble,
     DiceKriging,
     DiceOptim,
-    mco
+    GPareto,
+    emoa,
+    mco,
+    rgenoud,
+    pso,
+    GenSA

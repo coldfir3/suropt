@@ -48,5 +48,5 @@
 \item{...}{aditional parameters}
 }
 \description{
-A description of the selection functions
+Selection functions
 }
