@@ -22,10 +22,10 @@ The \code{surmodel} class
 \section{Slots}{
 
 \describe{
-\item{\code{data}}{bla}
+\item{\code{data}}{a data.frame with the model data}
 
-\item{\code{sur}}{bla}
+\item{\code{sur}}{a list with the surogates}
 
-\item{\code{fn}}{bla}
+\item{\code{fn}}{a function used as high-fidelity model}
 }}
 

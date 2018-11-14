@@ -5,8 +5,8 @@
 \title{Test function: The Nowacki Beam}
 \usage{
 nowacki_beam(x, g = c(5, 240, 120, 10, 2), l = 1500, F = 5000,
-  E = 216620, G = 86650, v = 0.27, box = data.frame(b = c(10, 50), h =
-  c(20, 250)))
+  E = 216620, G = 86650, v = 0.27, box = data.frame(b = c(10, 50),
+  h = c(20, 250)))
 }
 \arguments{
 \item{x}{vector of length 2 correspon the normalized beath and height of the

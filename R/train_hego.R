@@ -86,8 +86,7 @@ train_hego <- function(model, niter, optimizer = 'gen'){
         Y = matrix(res_star$y, nrow = 1),
         is.feasible = all(res_star$g < 0),
         source = 'HEGO',
-        stringsAsFactors = FALSE) %>%
-      dplyr::bind_rows(model@data, .)
+        stringsAsFactors = FALSE)
     else
       new_data <- data.frame(
         X = matrix(unname(x_star), nrow = 1),
@@ -95,13 +94,12 @@ train_hego <- function(model, niter, optimizer = 'gen'){
         G = matrix(res_star$g, nrow = 1),
         is.feasible = all(res_star$g < 0),
         source = 'HEGO',
-        stringsAsFactors = FALSE) %>%
-      dplyr::bind_rows(model@data, .)
+        stringsAsFactors = FALSE)
 
-    new_sur <- purrr::pmap(list(response = cbind(.Y(new_data), .G(new_data)), i = 1:d_out), quiet_km, design = .X(new_data))
+    new_sur <- purrr::pmap(list(object = model@sur, newy = cbind(.Y(new_data), .G(new_data))), quiet_update, newX = .X(new_data))
 
-    model@data <- new_data
-    model@sur <- new_sur
+    model@data <- dplyr::bind_rows(model@data, new_data)
+    model@sur <- new_sur %>% purrr::map('result')
 
     utils::setTxtProgressBar(pb, i)
 

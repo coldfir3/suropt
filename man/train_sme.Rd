@@ -24,4 +24,7 @@ fn <- binh
 model <- build_surmodel(fn, 10, 2) \%>\% train_sme(5)
 plot(model)
 suropt:::plot_predict(model)
+
+data <- data.frame(X.1 = runif(5), X.2 = runif(5), Y.1 = runif(5), G.1 = rnorm(5))
+x_star <- build_surmodel(data) \%>\% train_sme(-1)
 }

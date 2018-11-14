@@ -9,7 +9,8 @@ build_surmodel(fn, n_in, d_in, doe_type = "rlhs", sur_type = "mkm",
 }
 \arguments{
 \item{fn}{high fidelity function (fun must return a list of vectors with the
-format list(y = c(y1, y2, y3), g = c(g1, g2)))}
+format list(y = c(y1, y2, y3), g = c(g1, g2))).
+Alternatively, it can e a data.frame with names such as X.1, X.2, Y.1, G.1, G.2, G3}
 
 \item{n_in, d_in}{integer number of observations and dimension of the input variables}
 
@@ -31,7 +32,7 @@ Build an surmodel object
 
 fn <- function(x) list(y = x^2)
 model <- build_surmodel(fn, 20, 1)
-plot(model)
+suropt:::plot_surmodel(model)
 
 fn <- function(x) list(y = DiceKriging::branin(x))
 model <- build_surmodel(fn, 20, 2)
@@ -44,5 +45,11 @@ model <- build_surmodel(fn, 20, 1)
 
 fn <- binh
 model <- build_surmodel(fn, 20, 2)
-plot(model)
+suropt:::plot_surmodel(model)
+
+data <- data.frame(X.1 = runif(5), X.2 = runif(5), Y.1 = runif(5))
+model <- build_surmodel(data)
+
+data <- data.frame(X.1 = runif(5), X.2 = runif(5), Y.1 = runif(5), G.1 = rnorm(5))
+model <- build_surmodel(data)
 }

@@ -2,14 +2,15 @@ Package: suropt
 Type: Package
 Title: Surogate-based Optimization
 Version: 0.1.0
-Authors@R: c(person("Adriano", "Passos", email="adriano.utfpr@gmail.com", role=c("aut","cre")))
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: c(
+  person("Adriano", "Passos", email="adriano.utfpr@gmail.com", role=c("aut","cre")),
+  person("Marco", "Luersen", email="luersen@utfpr.edu.br", role="ctb"))
+Description:  Multi-Objective optimization based on surogate models.
+  Important functions: build_surmodel, train_hego, train_mego, train_sme.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Depends: R (>= 3.4.0)
 Imports: methods, 
     lhs,

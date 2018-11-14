@@ -82,31 +82,29 @@ train_mego <- function(model, niter, optimizer = 'gen'){
     res_star <- safe_fn(fn, x = x_star)
 
     if(is.null(res_star$g))
-      data <- data.frame(
+      new_data <- data.frame(
           X = matrix(unname(x_star), nrow = 1),
           Y = matrix(res_star$y, nrow = 1),
           is.feasible = all(res_star$g < 0),
           source = 'MEGO',
-          stringsAsFactors = FALSE) %>%
-        dplyr::bind_rows(data, .)
+          stringsAsFactors = FALSE)
     else
-      data <- data.frame(
+      new_data <- data.frame(
           X = matrix(unname(x_star), nrow = 1),
           Y = matrix(res_star$y, nrow = 1),
           G = matrix(res_star$g, nrow = 1),
           is.feasible = all(res_star$g < 0),
           source = 'MEGO',
-          stringsAsFactors = FALSE) %>%
-        dplyr::bind_rows(data, .)
+          stringsAsFactors = FALSE)
 
     utils::setTxtProgressBar(pb, i)
 
   }
 
-  sur <- purrr::pmap(list(response = cbind(.Y(data), .G(data)), i = 1:d_out), quiet_km, design = .X(data))
+  new_sur <- purrr::pmap(list(object = model@sur, newy = cbind(.Y(new_data), .G(new_data))), quiet_update, newX = .X(new_data))
 
-  model@data <- data
-  model@sur <- sur
+  model@data <- dplyr::bind_rows(data, new_data)
+  model@sur <- new_sur %>% purrr::map('result')
 
   cat('\n')
 

@@ -13,7 +13,17 @@
 #' model <- build_surmodel(fn, 10, 2) %>% train_sme(5)
 #' plot(model)
 #' suropt:::plot_predict(model)
+#'
+#' data <- data.frame(X.1 = runif(5), X.2 = runif(5), Y.1 = runif(5), G.1 = rnorm(5))
+#' x_star <- build_surmodel(data) %>% train_sme(-1)
 train_sme <- function(model, niter, optimizer = 'nsga2'){
+
+  if(niter < 0){
+    xout <- abs(niter)
+    niter <- xout
+  }
+  else
+    xout <- NULL
 
   cat('Running SME algorithm on', niter, 'iterations...\n')
   pb <- utils::txtProgressBar(min = 0, max = niter, width = niter, style = 3)
@@ -32,6 +42,9 @@ train_sme <- function(model, niter, optimizer = 'nsga2'){
     else
       stop('Only the "nsga2" optimizer is implemented.')
 
+    if(!is.null(xout))
+      return(front$par[order(get_entropy(model, front$par), decreasing = TRUE)[1:xout],])
+
     x_star <- front$par[which.max(get_entropy(model, front$par)),]
     res_star <- safe_fn(fn, x = x_star)
 
@@ -42,21 +55,19 @@ train_sme <- function(model, niter, optimizer = 'nsga2'){
         G = matrix(res_star$g, nrow = 1),
         is.feasible = all(res_star$g < 0),
         source = 'SME',
-        stringsAsFactors = FALSE) %>%
-        dplyr::bind_rows(model@data, .)
+        stringsAsFactors = FALSE)
     else
       new_data <- data.frame(
         X = matrix(unname(x_star), nrow = 1),
         Y = matrix(res_star$y, nrow = 1),
         is.feasible = all(res_star$g < 0),
         source = 'SME',
-        stringsAsFactors = FALSE) %>%
-      dplyr::bind_rows(model@data, .)
+        stringsAsFactors = FALSE)
 
-    new_sur <- purrr::pmap(list(response = cbind(.Y(new_data), .G(new_data)), i = 1:d_out), quiet_km, design = .X(new_data))
+    new_sur <- purrr::pmap(list(object = model@sur, newy = cbind(.Y(new_data), .G(new_data))), quiet_update, newX = .X(new_data))
 
-    model@data <- new_data
-    model@sur <- new_sur
+    model@data <- dplyr::bind_rows(model@data, new_data)
+    model@sur <- new_sur %>% purrr::map('result')
 
     utils::setTxtProgressBar(pb, i)
 
