@@ -9,7 +9,6 @@
 #' @examples
 #' fn <- binh
 #' model <- build_surmodel(fn, 5, 2) %>% train_mego(1, 'sa')
-#' plot(model)
 train_mego <- function(model, niter, optimizer = 'gen'){
 
   cat('Running MEGO algorithm on', niter, 'iterations...\n')

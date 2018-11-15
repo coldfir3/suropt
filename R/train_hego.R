@@ -9,7 +9,6 @@
 #' @examples
 #' fn <- binh
 #' model <- build_surmodel(fn, 5, 2) %>% train_hego(1, 'sa')
-#' plot(model)
 train_hego <- function(model, niter, optimizer = 'gen'){
 
   cat('Running HEGO algorithm on', niter, 'iterations...\n')

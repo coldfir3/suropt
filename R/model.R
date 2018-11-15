@@ -39,7 +39,6 @@ setClass('surmodel', representation(
 #'
 #' fn <- function(x) list(y = x^2)
 #' model <- build_surmodel(fn, 20, 1)
-#' plot(model)
 #'
 #' fn <- function(x) list(y = DiceKriging::branin(x))
 #' model <- build_surmodel(fn, 20, 2)
@@ -52,7 +51,6 @@ setClass('surmodel', representation(
 #'
 #' fn <- binh
 #' model <- build_surmodel(fn, 20, 2)
-#' plot(model)
 #'
 #' data <- data.frame(X.1 = runif(5), X.2 = runif(5), Y.1 = runif(5))
 #' model <- build_surmodel(data)

@@ -1,11 +1,11 @@
 Package: suropt
 Type: Package
-Title: Surogate-based Optimization
+Title: Surrogate-Based Optimization
 Version: 0.1.0
 Authors@R: c(
   person("Adriano", "Passos", email="adriano.utfpr@gmail.com", role=c("aut","cre")),
   person("Marco", "Luersen", email="luersen@utfpr.edu.br", role="ctb"))
-Description:  Multi-Objective optimization based on surogate models.
+Description:  Multi-Objective optimization based on surrogate models.
   Important functions: build_surmodel, train_hego, train_mego, train_sme.
 License: GPL-3
 Encoding: UTF-8
