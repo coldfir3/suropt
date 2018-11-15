@@ -3,22 +3,10 @@
 \docType{class}
 \name{surmodel-class}
 \alias{surmodel-class}
-\alias{show,surmodel-method}
 \title{The \code{surmodel} class}
-\usage{
-\S4method{show}{surmodel}(object)
-}
-\arguments{
-\item{object}{\code{surmodel} object}
-}
 \description{
 The \code{surmodel} class
 }
-\section{Methods (by generic)}{
-\itemize{
-\item \code{show}: show method
-}}
-
 \section{Slots}{
 
 \describe{

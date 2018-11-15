@@ -39,7 +39,7 @@ setClass('surmodel', representation(
 #'
 #' fn <- function(x) list(y = x^2)
 #' model <- build_surmodel(fn, 20, 1)
-#' suropt:::plot_surmodel(model)
+#' plot(model)
 #'
 #' fn <- function(x) list(y = DiceKriging::branin(x))
 #' model <- build_surmodel(fn, 20, 2)
@@ -52,7 +52,7 @@ setClass('surmodel', representation(
 #'
 #' fn <- binh
 #' model <- build_surmodel(fn, 20, 2)
-#' suropt:::plot_surmodel(model)
+#' plot(model)
 #'
 #' data <- data.frame(X.1 = runif(5), X.2 = runif(5), Y.1 = runif(5))
 #' model <- build_surmodel(data)
@@ -127,7 +127,12 @@ build_surmodel <- function(fn, n_in, d_in, doe_type = 'rlhs', sur_type = 'mkm', 
   model
 }
 
-show_surmodel <- function(object){
+# #' @describeIn surmodel show method
+# #' @param object \code{surmodel} object
+#' Custom method for showing model objects
+#' @param object \code{surmodel} object
+#' @export
+show.surmodel <- function(object){
 
   model <- object
 
@@ -137,13 +142,13 @@ show_surmodel <- function(object){
 
   cat('Surogate Model:', d_in, 'inputs,', d_obj, 'objectives,', d_cons, 'constrains')
 }
-#' @describeIn surmodel show method
-#' @param object \code{surmodel} object
-#' @export
-setMethod("show", signature(object = "surmodel"), show_surmodel)
-
+# #' @describeIn surmodel show method
+# #' @param object \code{surmodel} object
 # #' @export
-plot_surmodel <- function(x, y, ...){
+# setMethod("show", signature(object = "surmodel"), show_surmodel)
+
+#' @export
+plot.surmodel <- function(x, y, ...){
 
   model <- x
 
